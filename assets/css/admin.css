@@ -1,0 +1,42 @@
+/**
+ * Deimos Lost & Found Animals - Admin Styles
+ *
+ * @author  Wojtek Kobylecki / Bella Design Studio
+ * @version 1.0.6
+ */
+
+.lfa-help-box {
+    background: #e7f5ff;
+    border-left: 4px solid #0073aa;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.lfa-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lfa-table th {
+    text-align: left;
+    padding: 12px 16px 12px 0;
+    width: 140px;
+    vertical-align: top;
+    font-weight: 600;
+}
+
+.lfa-table td {
+    padding: 10px 0;
+}
+
+.lfa-table input[type="text"],
+.lfa-table input[type="date"],
+.lfa-table select {
+    width: 100%;
+    max-width: 320px;
+}
+
+.wp-picker-container {
+    display: inline-block;
+}

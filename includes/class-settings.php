@@ -1,0 +1,311 @@
+<?php
+/**
+ * Settings Page for Deimos Lost & Found Animals
+ *
+ * @package Deimos_Lost_Found_Animals
+ * @author  Wojtek Kobylecki / Bella Design Studio
+ * @version 1.0.6
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+/**
+ * Settings Class
+ */
+class LFA_Settings {
+
+    private static $instance = null;
+
+    public static function instance() {
+        if ( is_null( self::$instance ) ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    private function __construct() {
+        add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
+        add_action( 'admin_init', array( $this, 'register_settings' ) );
+    }
+
+    public function add_settings_page() {
+        add_submenu_page(
+            'edit.php?post_type=animal',
+            __( 'Settings', 'deimos-lost-found-animals' ),
+            __( 'Settings', 'deimos-lost-found-animals' ),
+            'manage_options',
+            'lfa-settings',
+            array( $this, 'render_settings_page' )
+        );
+    }
+
+    public function register_settings() {
+        register_setting( 'lfa_settings_group', 'lfa_settings', array( $this, 'sanitize_settings' ) );
+
+        // === DISPLAY SECTION ===
+        add_settings_section(
+            'lfa_display_section',
+            __( 'Grid Settings', 'deimos-lost-found-animals' ),
+            array( $this, 'display_section_callback' ),
+            'lfa-settings'
+        );
+
+        add_settings_field( 'columns', __( 'Grid Columns', 'deimos-lost-found-animals' ), array( $this, 'columns_field' ), 'lfa-settings', 'lfa_display_section' );
+        add_settings_field( 'limit', __( 'Animals Limit', 'deimos-lost-found-animals' ), array( $this, 'limit_field' ), 'lfa-settings', 'lfa_display_section' );
+
+        // === FILTER BAR SECTION ===
+        add_settings_section(
+            'lfa_filter_section',
+            __( 'Filter Bar Settings', 'deimos-lost-found-animals' ),
+            array( $this, 'filter_section_callback' ),
+            'lfa-settings'
+        );
+
+        add_settings_field( 'show_filters', __( 'Show Filter Bar', 'deimos-lost-found-animals' ), array( $this, 'show_filters_field' ), 'lfa-settings', 'lfa_filter_section' );
+        add_settings_field( 'filter_width', __( 'Filter Bar Width', 'deimos-lost-found-animals' ), array( $this, 'filter_width_field' ), 'lfa-settings', 'lfa_filter_section' );
+        add_settings_field( 'filter_alignment', __( 'Filter Bar Alignment', 'deimos-lost-found-animals' ), array( $this, 'filter_alignment_field' ), 'lfa-settings', 'lfa_filter_section' );
+
+        // === COLORS SECTION ===
+        add_settings_section(
+            'lfa_colors_section',
+            __( 'Color Settings', 'deimos-lost-found-animals' ),
+            array( $this, 'colors_section_callback' ),
+            'lfa-settings'
+        );
+
+        add_settings_field( 'filter_bar_color', __( 'Filter Bar Background', 'deimos-lost-found-animals' ), array( $this, 'filter_bar_color_field' ), 'lfa-settings', 'lfa_colors_section' );
+        add_settings_field( 'reset_button_color', __( 'Reset Button Color', 'deimos-lost-found-animals' ), array( $this, 'reset_button_color_field' ), 'lfa-settings', 'lfa_colors_section' );
+        add_settings_field( 'view_details_button_color', __( 'View Details Button Color', 'deimos-lost-found-animals' ), array( $this, 'view_details_button_color_field' ), 'lfa-settings', 'lfa_colors_section' );
+
+        // === CONTACT SECTION ===
+        add_settings_section(
+            'lfa_contact_section',
+            __( 'Contact Settings', 'deimos-lost-found-animals' ),
+            array( $this, 'contact_section_callback' ),
+            'lfa-settings'
+        );
+
+        add_settings_field( 'default_phone', __( 'Default Phone Number', 'deimos-lost-found-animals' ), array( $this, 'default_phone_field' ), 'lfa-settings', 'lfa_contact_section' );
+        add_settings_field( 'default_email', __( 'Default Contact Email', 'deimos-lost-found-animals' ), array( $this, 'default_email_field' ), 'lfa-settings', 'lfa_contact_section' );
+    }
+
+    public function sanitize_settings( $input ) {
+        $sanitized = array();
+
+        // Columns
+        $sanitized['columns'] = isset( $input['columns'] ) ? absint( $input['columns'] ) : 4;
+        if ( $sanitized['columns'] < 1 || $sanitized['columns'] > 4 ) {
+            $sanitized['columns'] = 4;
+        }
+
+        // Limit
+        $sanitized['limit'] = isset( $input['limit'] ) ? intval( $input['limit'] ) : -1;
+
+        // Show filters
+        $sanitized['show_filters'] = isset( $input['show_filters'] ) && 'yes' === $input['show_filters'] ? 'yes' : 'no';
+
+        // Filter width
+        $valid_widths              = array( 'compact', 'medium', 'large', 'full' );
+        $sanitized['filter_width'] = isset( $input['filter_width'] ) && in_array( $input['filter_width'], $valid_widths, true ) ? $input['filter_width'] : 'medium';
+
+        // Filter alignment
+        $valid_alignments              = array( 'left', 'center', 'right' );
+        $sanitized['filter_alignment'] = isset( $input['filter_alignment'] ) && in_array( $input['filter_alignment'], $valid_alignments, true ) ? $input['filter_alignment'] : 'left';
+
+        // Colors
+        $sanitized['filter_bar_color'] = isset( $input['filter_bar_color'] ) ? sanitize_hex_color( $input['filter_bar_color'] ) : '#f5f5f4';
+        if ( empty( $sanitized['filter_bar_color'] ) ) {
+            $sanitized['filter_bar_color'] = '#f5f5f4';
+        }
+
+        $sanitized['reset_button_color'] = isset( $input['reset_button_color'] ) ? sanitize_hex_color( $input['reset_button_color'] ) : '#e7e5e4';
+        if ( empty( $sanitized['reset_button_color'] ) ) {
+            $sanitized['reset_button_color'] = '#e7e5e4';
+        }
+
+        $sanitized['view_details_button_color'] = isset( $input['view_details_button_color'] ) ? sanitize_hex_color( $input['view_details_button_color'] ) : '#059669';
+        if ( empty( $sanitized['view_details_button_color'] ) ) {
+            $sanitized['view_details_button_color'] = '#059669';
+        }
+
+        // Contact
+        $sanitized['default_phone'] = isset( $input['default_phone'] ) ? sanitize_text_field( $input['default_phone'] ) : '';
+        $sanitized['default_email'] = isset( $input['default_email'] ) ? sanitize_email( $input['default_email'] ) : '';
+
+        return $sanitized;
+    }
+
+    public function display_section_callback() {
+        echo '<p>' . esc_html__( 'Configure how the animals grid is displayed.', 'deimos-lost-found-animals' ) . '</p>';
+    }
+
+    public function filter_section_callback() {
+        echo '<p>' . esc_html__( 'Configure the filter bar appearance and position.', 'deimos-lost-found-animals' ) . '</p>';
+    }
+
+    public function colors_section_callback() {
+        echo '<p>' . esc_html__( 'Customize the colors to match your theme.', 'deimos-lost-found-animals' ) . '</p>';
+    }
+
+    public function contact_section_callback() {
+        echo '<p>' . esc_html__( 'Set default contact information displayed on single animal pages.', 'deimos-lost-found-animals' ) . '</p>';
+    }
+
+    public function columns_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['columns'] ) ? $options['columns'] : 4;
+        ?>
+        <select name="lfa_settings[columns]" id="lfa_columns">
+            <option value="1" <?php selected( $value, 1 ); ?>>1 <?php esc_html_e( 'Column', 'deimos-lost-found-animals' ); ?></option>
+            <option value="2" <?php selected( $value, 2 ); ?>>2 <?php esc_html_e( 'Columns', 'deimos-lost-found-animals' ); ?></option>
+            <option value="3" <?php selected( $value, 3 ); ?>>3 <?php esc_html_e( 'Columns', 'deimos-lost-found-animals' ); ?></option>
+            <option value="4" <?php selected( $value, 4 ); ?>>4 <?php esc_html_e( 'Columns', 'deimos-lost-found-animals' ); ?></option>
+        </select>
+        <p class="description"><?php esc_html_e( 'Number of columns in the animals grid.', 'deimos-lost-found-animals' ); ?></p>
+        <?php
+    }
+
+    public function limit_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['limit'] ) ? $options['limit'] : -1;
+        ?>
+        <input type="number" name="lfa_settings[limit]" id="lfa_limit" value="<?php echo esc_attr( $value ); ?>" min="-1" class="small-text">
+        <p class="description"><?php esc_html_e( 'Maximum number of animals to display. Use -1 for unlimited.', 'deimos-lost-found-animals' ); ?></p>
+        <?php
+    }
+
+    public function show_filters_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['show_filters'] ) ? $options['show_filters'] : 'yes';
+        ?>
+        <label style="margin-right: 20px;">
+            <input type="radio" name="lfa_settings[show_filters]" value="yes" <?php checked( $value, 'yes' ); ?>>
+            <?php esc_html_e( 'Yes', 'deimos-lost-found-animals' ); ?>
+        </label>
+        <label>
+            <input type="radio" name="lfa_settings[show_filters]" value="no" <?php checked( $value, 'no' ); ?>>
+            <?php esc_html_e( 'No', 'deimos-lost-found-animals' ); ?>
+        </label>
+        <?php
+    }
+
+    public function filter_width_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['filter_width'] ) ? $options['filter_width'] : 'medium';
+        ?>
+        <select name="lfa_settings[filter_width]" id="lfa_filter_width">
+            <option value="compact" <?php selected( $value, 'compact' ); ?>><?php esc_html_e( 'Compact', 'deimos-lost-found-animals' ); ?> (520px)</option>
+            <option value="medium" <?php selected( $value, 'medium' ); ?>><?php esc_html_e( 'Medium', 'deimos-lost-found-animals' ); ?> (720px)</option>
+            <option value="large" <?php selected( $value, 'large' ); ?>><?php esc_html_e( 'Large', 'deimos-lost-found-animals' ); ?> (920px)</option>
+            <option value="full" <?php selected( $value, 'full' ); ?>><?php esc_html_e( 'Full Width', 'deimos-lost-found-animals' ); ?> (100%)</option>
+        </select>
+        <p class="description"><?php esc_html_e( 'Maximum width of the filter bar.', 'deimos-lost-found-animals' ); ?></p>
+        <?php
+    }
+
+    public function filter_alignment_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['filter_alignment'] ) ? $options['filter_alignment'] : 'left';
+        ?>
+        <label style="margin-right: 20px;">
+            <input type="radio" name="lfa_settings[filter_alignment]" value="left" <?php checked( $value, 'left' ); ?>>
+            <?php esc_html_e( 'Left', 'deimos-lost-found-animals' ); ?>
+        </label>
+        <label style="margin-right: 20px;">
+            <input type="radio" name="lfa_settings[filter_alignment]" value="center" <?php checked( $value, 'center' ); ?>>
+            <?php esc_html_e( 'Center', 'deimos-lost-found-animals' ); ?>
+        </label>
+        <label>
+            <input type="radio" name="lfa_settings[filter_alignment]" value="right" <?php checked( $value, 'right' ); ?>>
+            <?php esc_html_e( 'Right', 'deimos-lost-found-animals' ); ?>
+        </label>
+        <?php
+    }
+
+    public function filter_bar_color_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['filter_bar_color'] ) ? $options['filter_bar_color'] : '#f5f5f4';
+        ?>
+        <input type="text" name="lfa_settings[filter_bar_color]" id="lfa_filter_bar_color" value="<?php echo esc_attr( $value ); ?>" class="lfa-color-picker" data-default-color="#f5f5f4">
+        <?php
+    }
+
+    public function reset_button_color_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['reset_button_color'] ) ? $options['reset_button_color'] : '#e7e5e4';
+        ?>
+        <input type="text" name="lfa_settings[reset_button_color]" id="lfa_reset_button_color" value="<?php echo esc_attr( $value ); ?>" class="lfa-color-picker" data-default-color="#e7e5e4">
+        <?php
+    }
+
+    public function view_details_button_color_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['view_details_button_color'] ) ? $options['view_details_button_color'] : '#059669';
+        ?>
+        <input type="text" name="lfa_settings[view_details_button_color]" id="lfa_view_details_button_color" value="<?php echo esc_attr( $value ); ?>" class="lfa-color-picker" data-default-color="#059669">
+        <p class="description"><?php esc_html_e( 'Color of the "View Details" button on animal cards.', 'deimos-lost-found-animals' ); ?></p>
+        <?php
+    }
+
+    public function default_phone_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['default_phone'] ) ? $options['default_phone'] : '';
+        ?>
+        <input type="text" name="lfa_settings[default_phone]" id="lfa_default_phone" value="<?php echo esc_attr( $value ); ?>" class="regular-text" placeholder="+44 1234 567890">
+        <p class="description"><?php esc_html_e( 'Phone number displayed on single animal pages. Leave empty to hide the Call button.', 'deimos-lost-found-animals' ); ?></p>
+        <?php
+    }
+
+    public function default_email_field() {
+        $options = get_option( 'lfa_settings', array() );
+        $value   = isset( $options['default_email'] ) ? $options['default_email'] : '';
+        ?>
+        <input type="email" name="lfa_settings[default_email]" id="lfa_default_email" value="<?php echo esc_attr( $value ); ?>" class="regular-text" placeholder="info@example.com">
+        <p class="description"><?php esc_html_e( 'Email address for the Send Message button. Leave empty to link to homepage contact section.', 'deimos-lost-found-animals' ); ?></p>
+        <?php
+    }
+
+    public function render_settings_page() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        if ( isset( $_GET['settings-updated'] ) ) {
+            add_settings_error( 'lfa_messages', 'lfa_message', __( 'Settings saved.', 'deimos-lost-found-animals' ), 'updated' );
+        }
+
+        settings_errors( 'lfa_messages' );
+        ?>
+        <div class="wrap">
+            <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+
+            <form action="options.php" method="post">
+                <?php
+                settings_fields( 'lfa_settings_group' );
+                do_settings_sections( 'lfa-settings' );
+                submit_button( __( 'Save Settings', 'deimos-lost-found-animals' ) );
+                ?>
+            </form>
+
+            <hr>
+
+            <h2><?php esc_html_e( 'Shortcode Usage', 'deimos-lost-found-animals' ); ?></h2>
+            <p><?php esc_html_e( 'Use the shortcode below to display animals on any page:', 'deimos-lost-found-animals' ); ?></p>
+            <code style="display:inline-block;padding:8px 12px;background:#f0f0f0;border-radius:4px;">[lost_found_animals]</code>
+
+            <p style="margin-top: 15px;"><?php esc_html_e( 'Override settings with parameters:', 'deimos-lost-found-animals' ); ?></p>
+            <code style="display:inline-block;padding:8px 12px;background:#f0f0f0;border-radius:4px;">[lost_found_animals limit="8" columns="2" show_filters="false"]</code>
+        </div>
+
+        <script>
+        jQuery(document).ready(function($) {
+            $('.lfa-color-picker').wpColorPicker();
+        });
+        </script>
+        <?php
+    }
+}
+
+LFA_Settings::instance();
