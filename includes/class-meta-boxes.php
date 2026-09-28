@@ -78,7 +78,7 @@ class LFA_Meta_Boxes {
 
         <table class="lfa-table">
             <tr>
-                <th><label for="lfa_type"><?php esc_html_e( 'Animal Type', 'deimos-lost-found-animals' ); ?> *</label></th>
+                <th><label for="lfa_type"><?php esc_html_e( 'Animal Type', 'deimos-lost-found-animals' ); ?></label></th>
                 <td>
                     <select id="lfa_type" name="lfa_type">
                         <option value="Dog" <?php selected( $type, 'Dog' ); ?>><?php esc_html_e( 'Dog', 'deimos-lost-found-animals' ); ?></option>
@@ -88,7 +88,7 @@ class LFA_Meta_Boxes {
                 </td>
             </tr>
             <tr>
-                <th><label for="lfa_location"><?php esc_html_e( 'Location Found', 'deimos-lost-found-animals' ); ?> *</label></th>
+                <th><label for="lfa_location"><?php esc_html_e( 'Location Found', 'deimos-lost-found-animals' ); ?></label></th>
                 <td><input type="text" id="lfa_location" name="lfa_location" value="<?php echo esc_attr( $location ); ?>" class="regular-text"></td>
             </tr>
             <tr>
@@ -114,7 +114,7 @@ class LFA_Meta_Boxes {
                 <td><input type="text" id="lfa_age" name="lfa_age" value="<?php echo esc_attr( $age ); ?>" class="regular-text"></td>
             </tr>
             <tr>
-                <th><label for="lfa_status"><?php esc_html_e( 'Status', 'deimos-lost-found-animals' ); ?> *</label></th>
+                <th><label for="lfa_status"><?php esc_html_e( 'Status', 'deimos-lost-found-animals' ); ?></label></th>
                 <td>
                     <select id="lfa_status" name="lfa_status">
                         <option value="Found Today" <?php selected( $status, 'Found Today' ); ?>><?php esc_html_e( 'Found Today', 'deimos-lost-found-animals' ); ?></option>

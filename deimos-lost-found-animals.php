@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Deimos Lost & Found Animals
- * Plugin URI: https://github.com/deimos30/deimos-lost-found-animals
+ * Plugin URI: https://github.com/deimos30/bella-design-missing-pets-manager
  * Description: Manage lost and found animals with filtering and shortcode display. Works with any WordPress theme.
- * Version: 1.0.6
+ * Version: 1.0.6x
  * Author: Wojtek Kobylecki / Bella Design Studio
  * Author URI: https://github.com/deimos30
  * License: GPL v2 or later
@@ -19,10 +19,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants
-define( 'LFA_VERSION', '1.0.6' );
+define( 'LFA_VERSION', '1.0.6x' );
 define( 'LFA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LFA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'LFA_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+
+function lfa_activate() {
+    require_once LFA_PLUGIN_DIR . 'includes/class-post-type.php';
+    LFA_Post_Type::instance()->register();
+    $defaults = array(
+        'columns' => 4, 'limit' => -1, 'show_filters' => 'yes',
+        'filter_width' => 'medium', 'filter_alignment' => 'left',
+        'filter_bar_color' => '#f5f5f4', 'reset_button_color' => '#e7e5e4',
+        'view_details_button_color' => '#059669',
+        'default_phone' => '', 'default_email' => '',
+    );
+    $existing = get_option( 'lfa_settings', array() );
+    if ( empty( $existing ) ) {
+        add_option( 'lfa_settings', $defaults );
+    } else {
+        update_option( 'lfa_settings', array_merge( $defaults, $existing ) );
+    }
+    flush_rewrite_rules();
+    update_option( 'lfa_flush_version', LFA_VERSION );
+}
+register_activation_hook( __FILE__, 'lfa_activate' );
+
+function lfa_deactivate() {
+    flush_rewrite_rules();
+    delete_option( 'lfa_flush_version' );
+}
+register_deactivation_hook( __FILE__, 'lfa_deactivate' );
 
 /**
  * Main Plugin Class
@@ -75,9 +102,14 @@ final class Lost_Found_Animal {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
         add_action( 'after_setup_theme', array( $this, 'image_sizes' ) );
         add_action( 'wp_head', array( $this, 'custom_dynamic_css' ), 100 );
+        add_action( 'init', array( $this, 'maybe_flush_rewrite_rules' ), 999 );
+    }
 
-        register_activation_hook( __FILE__, array( $this, 'activate' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+    public function maybe_flush_rewrite_rules() {
+        if ( get_option( 'lfa_flush_version' ) !== LFA_VERSION ) {
+            flush_rewrite_rules();
+            update_option( 'lfa_flush_version', LFA_VERSION );
+        }
     }
 
     /**
@@ -243,9 +275,7 @@ final class Lost_Found_Animal {
     /**
      * Plugin deactivation
      */
-    public function deactivate() {
-        flush_rewrite_rules();
-    }
+    public function deactivate() {}
 }
 
 /**
