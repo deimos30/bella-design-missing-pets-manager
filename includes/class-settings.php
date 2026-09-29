@@ -13,9 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Settings Class
- */
-/**
  * Plugin settings page.
  */
 class DEIMLOFO_Settings {
@@ -39,11 +36,19 @@ class DEIMLOFO_Settings {
 		return self::$instance;
 	}
 
+	/**
+	 * Constructor
+	 */
 	private function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 	}
 
+	/**
+	 * Register the settings page under the Animals menu.
+	 *
+	 * @return void
+	 */
 	public function add_settings_page() {
 		add_submenu_page(
 			'edit.php?post_type=deimlofo_animal',
@@ -55,6 +60,11 @@ class DEIMLOFO_Settings {
 		);
 	}
 
+	/**
+	 * Register the setting, its sections and fields.
+	 *
+	 * @return void
+	 */
 	public function register_settings() {
 		register_setting( 'deimlofo_settings_group', 'deimlofo_settings', array( $this, 'sanitize_settings' ) );
 
@@ -105,68 +115,57 @@ class DEIMLOFO_Settings {
 		add_settings_field( 'default_email', __( 'Default Contact Email', 'deimos-lost-found-animals' ), array( $this, 'default_email_field' ), 'deimlofo-settings', 'deimlofo_contact_section' );
 	}
 
+	/**
+	 * Sanitize settings submitted from the settings page.
+	 *
+	 * @param mixed $input Raw settings.
+	 * @return array
+	 */
 	public function sanitize_settings( $input ) {
-		$sanitized = array();
-
-		// Columns
-		$sanitized['columns'] = isset( $input['columns'] ) ? absint( $input['columns'] ) : 4;
-		if ( $sanitized['columns'] < 1 || $sanitized['columns'] > 4 ) {
-			$sanitized['columns'] = 4;
-		}
-
-		// Limit
-		$sanitized['limit'] = isset( $input['limit'] ) ? intval( $input['limit'] ) : -1;
-
-		// Show filters
-		$sanitized['show_filters'] = isset( $input['show_filters'] ) && 'yes' === $input['show_filters'] ? 'yes' : 'no';
-
-		// Filter width
-		$valid_widths              = array( 'compact', 'medium', 'large', 'full' );
-		$sanitized['filter_width'] = isset( $input['filter_width'] ) && in_array( $input['filter_width'], $valid_widths, true ) ? $input['filter_width'] : 'medium';
-
-		// Filter alignment
-		$valid_alignments              = array( 'left', 'center', 'right' );
-		$sanitized['filter_alignment'] = isset( $input['filter_alignment'] ) && in_array( $input['filter_alignment'], $valid_alignments, true ) ? $input['filter_alignment'] : 'left';
-
-		// Colors
-		$sanitized['filter_bar_color'] = isset( $input['filter_bar_color'] ) ? sanitize_hex_color( $input['filter_bar_color'] ) : '#f5f5f4';
-		if ( empty( $sanitized['filter_bar_color'] ) ) {
-			$sanitized['filter_bar_color'] = '#f5f5f4';
-		}
-
-		$sanitized['reset_button_color'] = isset( $input['reset_button_color'] ) ? sanitize_hex_color( $input['reset_button_color'] ) : '#e7e5e4';
-		if ( empty( $sanitized['reset_button_color'] ) ) {
-			$sanitized['reset_button_color'] = '#e7e5e4';
-		}
-
-		$sanitized['view_details_button_color'] = isset( $input['view_details_button_color'] ) ? sanitize_hex_color( $input['view_details_button_color'] ) : '#059669';
-		if ( empty( $sanitized['view_details_button_color'] ) ) {
-			$sanitized['view_details_button_color'] = '#059669';
-		}
-
-		// Contact
-		$sanitized['default_phone'] = isset( $input['default_phone'] ) ? sanitize_text_field( $input['default_phone'] ) : '';
-		$sanitized['default_email'] = isset( $input['default_email'] ) ? sanitize_email( $input['default_email'] ) : '';
-
-		return $sanitized;
+		return deimlofo_sanitize_settings( $input );
 	}
 
+	/**
+	 * Grid section description.
+	 *
+	 * @return void
+	 */
 	public function display_section_callback() {
 		echo '<p>' . esc_html__( 'Configure how the animals grid is displayed.', 'deimos-lost-found-animals' ) . '</p>';
 	}
 
+	/**
+	 * Filter bar section description.
+	 *
+	 * @return void
+	 */
 	public function filter_section_callback() {
 		echo '<p>' . esc_html__( 'Configure the filter bar appearance and position.', 'deimos-lost-found-animals' ) . '</p>';
 	}
 
+	/**
+	 * Colors section description.
+	 *
+	 * @return void
+	 */
 	public function colors_section_callback() {
 		echo '<p>' . esc_html__( 'Customize the colors to match your theme.', 'deimos-lost-found-animals' ) . '</p>';
 	}
 
+	/**
+	 * Contact section description.
+	 *
+	 * @return void
+	 */
 	public function contact_section_callback() {
 		echo '<p>' . esc_html__( 'Set default contact information displayed on single animal pages.', 'deimos-lost-found-animals' ) . '</p>';
 	}
 
+	/**
+	 * Grid columns field.
+	 *
+	 * @return void
+	 */
 	public function columns_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['columns'] ) ? $options['columns'] : 4;
@@ -181,6 +180,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Animals limit field.
+	 *
+	 * @return void
+	 */
 	public function limit_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['limit'] ) ? $options['limit'] : -1;
@@ -190,6 +194,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Show filter bar field.
+	 *
+	 * @return void
+	 */
 	public function show_filters_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['show_filters'] ) ? $options['show_filters'] : 'yes';
@@ -205,6 +214,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Filter bar width field.
+	 *
+	 * @return void
+	 */
 	public function filter_width_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['filter_width'] ) ? $options['filter_width'] : 'medium';
@@ -219,6 +233,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Filter bar alignment field.
+	 *
+	 * @return void
+	 */
 	public function filter_alignment_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['filter_alignment'] ) ? $options['filter_alignment'] : 'left';
@@ -238,6 +257,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Filter bar background colour field.
+	 *
+	 * @return void
+	 */
 	public function filter_bar_color_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['filter_bar_color'] ) ? $options['filter_bar_color'] : '#f5f5f4';
@@ -246,6 +270,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Reset button colour field.
+	 *
+	 * @return void
+	 */
 	public function reset_button_color_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['reset_button_color'] ) ? $options['reset_button_color'] : '#e7e5e4';
@@ -254,6 +283,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * View Details button colour field.
+	 *
+	 * @return void
+	 */
 	public function view_details_button_color_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['view_details_button_color'] ) ? $options['view_details_button_color'] : '#059669';
@@ -263,6 +297,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Default phone field.
+	 *
+	 * @return void
+	 */
 	public function default_phone_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['default_phone'] ) ? $options['default_phone'] : '';
@@ -272,6 +311,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Default email field.
+	 *
+	 * @return void
+	 */
 	public function default_email_field() {
 		$options = get_option( 'deimlofo_settings', array() );
 		$value   = isset( $options['default_email'] ) ? $options['default_email'] : '';
@@ -281,6 +325,11 @@ class DEIMLOFO_Settings {
 		<?php
 	}
 
+	/**
+	 * Render the settings page.
+	 *
+	 * @return void
+	 */
 	public function render_settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
