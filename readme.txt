@@ -2,7 +2,7 @@
 Contributors: wko1
 Tags: lost, found, animals, pets, shelter
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 7.1
 Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -95,6 +95,7 @@ animals, photos and settings are migrated automatically; only the shortcode text
 * Fixed: Menu items linking to animals or the animal archive are updated to the new post type during migration.
 * Fixed: The single animal page no longer triggers "Theme without header.php/footer.php" deprecation notices or prints a second `<title>` on block themes; it now renders the theme's header and footer template parts.
 * Changed: Variables in the single animal template are prefixed so the template defines no generic global variables.
+* Tested with WordPress 7.1 (and the minimum supported 5.0) on PHP 7.4 and 8.5.
 
 = 1.1.0 =
 * Changed: All functions, classes, constants, options, post meta, nonces, asset handles, image sizes and CSS classes are now prefixed with `deimlofo` / `DEIMLOFO_` to meet WordPress.org uniqueness requirements.
