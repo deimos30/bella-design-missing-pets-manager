@@ -93,6 +93,8 @@ animals, photos and settings are migrated automatically; only the shortcode text
 * Fixed: A failed or interrupted migration keeps all original data, shows a notice to administrators and is retried automatically. The migration is protected by a lock and is safe to run repeatedly.
 * Fixed: The migration now also runs on the front end, so animals stay visible after an automatic update even before an administrator visits the dashboard.
 * Fixed: Menu items linking to animals or the animal archive are updated to the new post type during migration.
+* Fixed: The single animal page no longer triggers "Theme without header.php/footer.php" deprecation notices or prints a second `<title>` on block themes; it now renders the theme's header and footer template parts.
+* Changed: Variables in the single animal template are prefixed so the template defines no generic global variables.
 
 = 1.1.0 =
 * Changed: All functions, classes, constants, options, post meta, nonces, asset handles, image sizes and CSS classes are now prefixed with `deimlofo` / `DEIMLOFO_` to meet WordPress.org uniqueness requirements.

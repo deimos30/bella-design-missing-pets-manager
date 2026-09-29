@@ -406,6 +406,67 @@ function deimlofo_get_setting( $key, $default_value = '' ) {
 }
 
 /**
+ * Whether the active theme is a block theme.
+ *
+ * @return bool
+ */
+function deimlofo_is_block_theme() {
+	return function_exists( 'wp_is_block_theme' ) && function_exists( 'block_header_area' ) && wp_is_block_theme();
+}
+
+/**
+ * Open the page for the single animal template.
+ *
+ * Block themes have no header.php, so calling get_header() there is deprecated
+ * and falls back to a legacy header. For block themes the page is opened the
+ * way WordPress opens its own template canvas, followed by the theme's header
+ * template part.
+ *
+ * @return void
+ */
+function deimlofo_template_header() {
+	if ( ! deimlofo_is_block_theme() ) {
+		get_header();
+		return;
+	}
+	?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>" />
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+	<?php wp_body_open(); ?>
+<div class="wp-site-blocks">
+	<header class="wp-block-template-part">
+		<?php block_header_area(); ?>
+	</header>
+	<?php
+}
+
+/**
+ * Close the page for the single animal template.
+ *
+ * @return void
+ */
+function deimlofo_template_footer() {
+	if ( ! deimlofo_is_block_theme() ) {
+		get_footer();
+		return;
+	}
+	?>
+	<footer class="wp-block-template-part">
+		<?php block_footer_area(); ?>
+	</footer>
+</div>
+	<?php wp_footer(); ?>
+</body>
+</html>
+	<?php
+}
+
+/**
  * Get featured image only (simplified - no gallery)
  *
  * @param int $post_id Post ID.

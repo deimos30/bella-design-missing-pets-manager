@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-get_header();
+deimlofo_template_header();
 
 $deimlofo_type       = deimlofo_get_meta( get_the_ID(), 'type' );
 $deimlofo_status     = deimlofo_get_meta( get_the_ID(), 'status' );
@@ -194,4 +194,4 @@ $deimlofo_default_email = deimlofo_get_setting( 'default_email', '' );
 	<a href="<?php echo esc_url( $deimlofo_archive ? $deimlofo_archive : home_url( '/' ) ); ?>" class="deimlofo-back">&larr; <?php esc_html_e( 'Back', 'deimos-lost-found-animals' ); ?></a>
 </div>
 
-<?php get_footer(); ?>
+<?php deimlofo_template_footer(); ?>
