@@ -1,21 +1,23 @@
 /**
  * Deimos Lost & Found Animals - Frontend Styles
  *
- * @author  Wojtek Kobylecki / Bella Design Studio
- * @version 1.0.6
+ * @package   Deimos_Lost_Found_Animals
+ * @author    Wojtek Kobylecki
+ * @copyright Copyright (c) 2026 Wojtek Kobylecki
+ * @license   GPL-2.0-or-later
  */
 
 /* =========================
    RESET & CONTAINER
    ========================= */
 
-.lfa-container *,
-.lfa-container *::before,
-.lfa-container *::after {
+.deimlofo-container *,
+.deimlofo-container *::before,
+.deimlofo-container *::after {
     box-sizing: border-box !important;
 }
 
-.lfa-container {
+.deimlofo-container {
     max-width: 1280px !important;
     margin: 0 auto !important;
     padding: 0 16px !important;
@@ -26,7 +28,7 @@
    FILTER BAR - SINGLE LINE
    ========================= */
 
-.lfa-filters {
+.deimlofo-filters {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
@@ -39,7 +41,7 @@
     width: auto !important;
 }
 
-.lfa-select {
+.deimlofo-select {
     display: inline-block !important;
     width: auto !important;
     min-width: 120px !important;
@@ -60,13 +62,13 @@
     -moz-appearance: none !important;
 }
 
-.lfa-select:focus {
+.deimlofo-select:focus {
     outline: none !important;
     border-color: #10b981 !important;
     box-shadow: 0 0 0 3px rgba(16,185,129,0.15) !important;
 }
 
-.lfa-reset {
+.deimlofo-reset {
     display: inline-block !important;
     width: auto !important;
     padding: 8px 16px !important;
@@ -82,11 +84,11 @@
     white-space: nowrap !important;
 }
 
-.lfa-reset:hover {
+.deimlofo-reset:hover {
     background: #d6d3d1 !important;
 }
 
-.lfa-count {
+.deimlofo-count {
     display: inline-block !important;
     color: #78716c !important;
     font-size: 13px !important;
@@ -96,7 +98,7 @@
 
 /* Mobile: Stack vertically */
 @media (max-width: 768px) {
-    .lfa-filters {
+    .deimlofo-filters {
         flex-direction: column !important;
         flex-wrap: wrap !important;
         align-items: stretch !important;
@@ -105,17 +107,17 @@
         margin-right: 0 !important;
     }
 
-    .lfa-select {
+    .deimlofo-select {
         width: 100% !important;
         max-width: 100% !important;
         min-width: auto !important;
     }
 
-    .lfa-reset {
+    .deimlofo-reset {
         width: 100% !important;
     }
 
-    .lfa-count {
+    .deimlofo-count {
         margin-left: 0 !important;
         text-align: center !important;
         margin-top: 8px !important;
@@ -126,29 +128,29 @@
    GRID
    ========================= */
 
-.lfa-grid {
+.deimlofo-grid {
     display: grid !important;
     gap: 24px !important;
 }
 
-.lfa-cols-1 { grid-template-columns: 1fr !important; }
-.lfa-cols-2 { grid-template-columns: repeat(2, 1fr) !important; }
-.lfa-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
-.lfa-cols-4 { grid-template-columns: repeat(4, 1fr) !important; }
+.deimlofo-cols-1 { grid-template-columns: 1fr !important; }
+.deimlofo-cols-2 { grid-template-columns: repeat(2, 1fr) !important; }
+.deimlofo-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
+.deimlofo-cols-4 { grid-template-columns: repeat(4, 1fr) !important; }
 
 @media (max-width: 1024px) {
-    .lfa-cols-3, .lfa-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+    .deimlofo-cols-3, .deimlofo-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 @media (max-width: 640px) {
-    .lfa-cols-2, .lfa-cols-3, .lfa-cols-4 { grid-template-columns: 1fr !important; }
+    .deimlofo-cols-2, .deimlofo-cols-3, .deimlofo-cols-4 { grid-template-columns: 1fr !important; }
 }
 
 /* =========================
    CARD
    ========================= */
 
-.lfa-card {
+.deimlofo-card {
     background: #fafaf9 !important;
     border-radius: 8px !important;
     overflow: hidden !important;
@@ -157,12 +159,12 @@
     transition: box-shadow 0.2s, transform 0.2s !important;
 }
 
-.lfa-card:hover {
+.deimlofo-card:hover {
     box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
     transform: translateY(-2px) !important;
 }
 
-.lfa-card-image {
+.deimlofo-card-image {
     display: block !important;
     position: relative !important;
     height: 220px !important;
@@ -170,13 +172,13 @@
     background: #e7e5e4 !important;
 }
 
-.lfa-card-image img {
+.deimlofo-card-image img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
 }
 
-.lfa-no-photo {
+.deimlofo-no-photo {
     width: 100% !important;
     height: 100% !important;
     display: flex !important;
@@ -186,7 +188,7 @@
     font-size: 14px !important;
 }
 
-.lfa-badge {
+.deimlofo-badge {
     position: absolute !important;
     top: 8px !important;
     right: 8px !important;
@@ -201,41 +203,41 @@
 }
 
 /* Card body */
-.lfa-card-body {
+.deimlofo-card-body {
     padding: 16px !important;
 }
 
-.lfa-card-title {
+.deimlofo-card-title {
     font-size: 18px !important;
     font-weight: 600 !important;
     margin: 0 0 8px !important;
     line-height: 1.3 !important;
 }
 
-.lfa-card-title a {
+.deimlofo-card-title a {
     color: #292524 !important;
     text-decoration: none !important;
     transition: color 0.2s !important;
 }
 
-.lfa-card-title a:hover {
+.deimlofo-card-title a:hover {
     color: #059669 !important;
 }
 
-.lfa-card-location {
+.deimlofo-card-location {
     font-size: 14px !important;
     color: #78716c !important;
     margin: 0 0 12px !important;
 }
 
-.lfa-card-tags {
+.deimlofo-card-tags {
     display: flex !important;
     flex-wrap: wrap !important;
     gap: 6px !important;
     margin-bottom: 12px !important;
 }
 
-.lfa-tag {
+.deimlofo-tag {
     font-size: 12px !important;
     background: #e7e5e4 !important;
     color: #57534e !important;
@@ -243,7 +245,7 @@
     border-radius: 4px !important;
 }
 
-.lfa-btn {
+.deimlofo-btn {
     display: block !important;
     width: 100% !important;
     text-align: center !important;
@@ -259,13 +261,13 @@
     transition: background 0.2s !important;
 }
 
-.lfa-btn:hover {
+.deimlofo-btn:hover {
     background: #047857 !important;
     color: #fff !important;
 }
 
 /* Empty */
-.lfa-empty {
+.deimlofo-empty {
     grid-column: 1 / -1 !important;
     text-align: center !important;
     padding: 48px 16px !important;
@@ -276,13 +278,13 @@
    SINGLE PAGE
    ========================= */
 
-.lfa-single {
+.deimlofo-single {
     max-width: 1200px !important;
     margin: 0 auto !important;
     padding: 32px 16px !important;
 }
 
-.lfa-breadcrumb {
+.deimlofo-breadcrumb {
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -291,44 +293,44 @@
     color: #78716c !important;
 }
 
-.lfa-breadcrumb a {
+.deimlofo-breadcrumb a {
     color: #78716c !important;
     text-decoration: none !important;
 }
 
-.lfa-breadcrumb a:hover {
+.deimlofo-breadcrumb a:hover {
     color: #059669 !important;
 }
 
-.lfa-single-grid {
+.deimlofo-single-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 48px !important;
 }
 
 @media (max-width: 900px) {
-    .lfa-single-grid {
+    .deimlofo-single-grid {
         grid-template-columns: 1fr !important;
         gap: 32px !important;
     }
 }
 
 /* Main photo */
-.lfa-main-photo {
+.deimlofo-main-photo {
     position: relative !important;
     border-radius: 12px !important;
     overflow: hidden !important;
     background: #f5f5f4 !important;
 }
 
-.lfa-main-photo img {
+.deimlofo-main-photo img {
     width: 100% !important;
     height: 450px !important;
     object-fit: cover !important;
     display: block !important;
 }
 
-.lfa-main-badge {
+.deimlofo-main-badge {
     position: absolute !important;
     top: 16px !important;
     left: 16px !important;
@@ -340,14 +342,14 @@
 }
 
 /* Details */
-.lfa-single-title {
+.deimlofo-single-title {
     font-size: 32px !important;
     font-weight: 700 !important;
     color: #292524 !important;
     margin: 0 0 16px !important;
 }
 
-.lfa-single-location {
+.deimlofo-single-location {
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -356,21 +358,21 @@
     font-size: 16px !important;
 }
 
-.lfa-details-grid {
+.deimlofo-details-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
     margin-bottom: 24px !important;
 }
 
-.lfa-detail-box {
+.deimlofo-detail-box {
     background: #fff !important;
     padding: 16px !important;
     border-radius: 8px !important;
     border: 1px solid #e7e5e4 !important;
 }
 
-.lfa-detail-label {
+.deimlofo-detail-label {
     font-size: 12px !important;
     color: #78716c !important;
     text-transform: uppercase !important;
@@ -378,21 +380,21 @@
     margin-bottom: 4px !important;
 }
 
-.lfa-detail-value {
+.deimlofo-detail-value {
     font-weight: 600 !important;
     color: #292524 !important;
 }
 
-.lfa-description {
+.deimlofo-description {
     margin-bottom: 24px !important;
 }
 
-.lfa-description h2 {
+.deimlofo-description h2 {
     font-size: 20px !important;
     margin: 0 0 12px !important;
 }
 
-.lfa-description-content {
+.deimlofo-description-content {
     background: #fff !important;
     padding: 20px !important;
     border-radius: 8px !important;
@@ -401,7 +403,7 @@
 }
 
 /* Contact box */
-.lfa-contact-box {
+.deimlofo-contact-box {
     background: #ecfdf5 !important;
     border: 1px solid #a7f3d0 !important;
     border-radius: 12px !important;
@@ -409,23 +411,23 @@
     margin-bottom: 24px !important;
 }
 
-.lfa-contact-box h3 {
+.deimlofo-contact-box h3 {
     color: #065f46 !important;
     margin: 0 0 8px !important;
 }
 
-.lfa-contact-box p {
+.deimlofo-contact-box p {
     color: #047857 !important;
     margin: 0 0 16px !important;
 }
 
-.lfa-contact-btns {
+.deimlofo-contact-btns {
     display: flex !important;
     gap: 12px !important;
     flex-wrap: wrap !important;
 }
 
-.lfa-btn-call {
+.deimlofo-btn-call {
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -438,12 +440,12 @@
     transition: background 0.2s !important;
 }
 
-.lfa-btn-call:hover {
+.deimlofo-btn-call:hover {
     background: #047857 !important;
     color: #fff !important;
 }
 
-.lfa-btn-msg {
+.deimlofo-btn-msg {
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -457,13 +459,13 @@
     transition: all 0.2s !important;
 }
 
-.lfa-btn-msg:hover {
+.deimlofo-btn-msg:hover {
     border-color: #059669 !important;
     color: #059669 !important;
 }
 
 /* Reunited box */
-.lfa-reunited-box {
+.deimlofo-reunited-box {
     background: #d1fae5 !important;
     border: 1px solid #a7f3d0 !important;
     border-radius: 12px !important;
@@ -472,23 +474,23 @@
     margin-bottom: 24px !important;
 }
 
-.lfa-reunited-box h3 {
+.deimlofo-reunited-box h3 {
     color: #065f46 !important;
     font-size: 24px !important;
     margin: 8px 0 !important;
 }
 
-.lfa-reunited-box p {
+.deimlofo-reunited-box p {
     color: #047857 !important;
     margin: 0 !important;
 }
 
 /* Share */
-.lfa-share {
+.deimlofo-share {
     margin-top: 24px !important;
 }
 
-.lfa-share-label {
+.deimlofo-share-label {
     font-size: 12px !important;
     color: #78716c !important;
     text-transform: uppercase !important;
@@ -496,12 +498,12 @@
     margin-bottom: 12px !important;
 }
 
-.lfa-share-btns {
+.deimlofo-share-btns {
     display: flex !important;
     gap: 8px !important;
 }
 
-.lfa-share-btn {
+.deimlofo-share-btn {
     display: inline-flex !important;
     align-items: center !important;
     gap: 6px !important;
@@ -514,17 +516,17 @@
     transition: opacity 0.2s !important;
 }
 
-.lfa-share-btn:hover {
+.deimlofo-share-btn:hover {
     opacity: 0.9 !important;
     color: #fff !important;
 }
 
-.lfa-share-fb { background: #1877f2 !important; }
-.lfa-share-tw { background: #0ea5e9 !important; }
-.lfa-share-wa { background: #25d366 !important; }
+.deimlofo-share-fb { background: #1877f2 !important; }
+.deimlofo-share-tw { background: #0ea5e9 !important; }
+.deimlofo-share-wa { background: #25d366 !important; }
 
 /* Back link */
-.lfa-back {
+.deimlofo-back {
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -534,6 +536,63 @@
     font-weight: 500 !important;
 }
 
-.lfa-back:hover {
+.deimlofo-back:hover {
     color: #059669 !important;
+}
+
+/* Status badge colours
+   Replaces the per-element inline background that earlier versions emitted.
+   Two-class selectors so they win over the .deimlofo-badge base background. */
+.deimlofo-badge.deimlofo-status--found-today,
+.deimlofo-main-badge.deimlofo-status--found-today {
+    background: #f97316 !important;
+}
+
+.deimlofo-badge.deimlofo-status--found,
+.deimlofo-main-badge.deimlofo-status--found {
+    background: #3b82f6 !important;
+}
+
+.deimlofo-badge.deimlofo-status--available,
+.deimlofo-main-badge.deimlofo-status--available {
+    background: #8b5cf6 !important;
+}
+
+.deimlofo-badge.deimlofo-status--reunited,
+.deimlofo-main-badge.deimlofo-status--reunited {
+    background: #10b981 !important;
+}
+
+.deimlofo-badge.deimlofo-status--not-available,
+.deimlofo-main-badge.deimlofo-status--not-available,
+.deimlofo-badge.deimlofo-status--default,
+.deimlofo-main-badge.deimlofo-status--default {
+    background: #6b7280 !important;
+}
+
+/* Filtered-empty state, hidden until the filters match nothing */
+.deimlofo-no-results {
+    display: none;
+}
+
+/* Single view helpers (previously inline style attributes) */
+.deimlofo-no-photo.deimlofo-no-photo--large {
+    height: 450px !important;
+}
+
+.deimlofo-reunited-heart {
+    font-size: 48px !important;
+}
+
+.deimlofo-reunited-box.deimlofo-reunited-box--muted {
+    background: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+}
+
+.deimlofo-reunited-box.deimlofo-reunited-box--muted h3 {
+    color: #374151 !important;
+}
+
+.deimlofo-reunited-box.deimlofo-reunited-box--muted p {
+    color: #6b7280 !important;
 }

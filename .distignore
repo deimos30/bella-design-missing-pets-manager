@@ -1,0 +1,39 @@
+# Version control
+.git
+.gitignore
+.github
+.distignore
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea
+.vscode
+
+# Tooling and dependencies
+node_modules
+vendor
+composer.json
+composer.lock
+package.json
+package-lock.json
+phpcs.xml
+phpcs.xml.dist
+phpunit.xml
+phpunit.xml.dist
+.phpcs.xml.dist
+
+# Tests and build output
+tests
+bin
+build
+*.zip
+*.tar.gz
+*.log
+*.tmp
+
+# Agent / task notes
+.claude
+CLAUDE.md
