@@ -408,10 +408,18 @@ function deimlofo_get_setting( $key, $default_value = '' ) {
 /**
  * Whether the active theme is a block theme.
  *
+ * Every function used by the block theme branch of the single animal template
+ * is checked, because the plugin supports WordPress versions that predate
+ * them (wp_body_open() arrived in 5.2, the block template functions in 5.9).
+ *
  * @return bool
  */
 function deimlofo_is_block_theme() {
-	return function_exists( 'wp_is_block_theme' ) && function_exists( 'block_header_area' ) && wp_is_block_theme();
+	return function_exists( 'wp_is_block_theme' )
+		&& function_exists( 'block_header_area' )
+		&& function_exists( 'block_footer_area' )
+		&& function_exists( 'wp_body_open' )
+		&& wp_is_block_theme();
 }
 
 /**
