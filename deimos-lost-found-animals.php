@@ -415,6 +415,37 @@ function deimlofo_is_block_theme() {
 }
 
 /**
+ * Rendered header and footer template parts of a block theme.
+ *
+ * Both parts are rendered once, before wp_head() runs, exactly like WordPress
+ * does in wp-includes/template-canvas.php. Blocks such as Navigation register
+ * their styles and script modules while rendering, and those must be known
+ * before wp_head() prints the import map.
+ *
+ * @return array{header: string, footer: string}
+ */
+function deimlofo_block_template_parts() {
+	static $parts = null;
+
+	if ( null === $parts ) {
+		ob_start();
+		block_header_area();
+		$header = ob_get_clean();
+
+		ob_start();
+		block_footer_area();
+		$footer = ob_get_clean();
+
+		$parts = array(
+			'header' => (string) $header,
+			'footer' => (string) $footer,
+		);
+	}
+
+	return $parts;
+}
+
+/**
  * Open the page for the single animal template.
  *
  * Block themes have no header.php, so calling get_header() there is deprecated
@@ -429,6 +460,8 @@ function deimlofo_template_header() {
 		get_header();
 		return;
 	}
+
+	$parts = deimlofo_block_template_parts();
 	?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -440,7 +473,7 @@ function deimlofo_template_header() {
 	<?php wp_body_open(); ?>
 <div class="wp-site-blocks">
 	<header class="wp-block-template-part">
-		<?php block_header_area(); ?>
+		<?php echo $parts['header']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme template part rendered by block_header_area(); printed unescaped exactly as template-canvas.php does. ?>
 	</header>
 	<?php
 }
@@ -455,9 +488,11 @@ function deimlofo_template_footer() {
 		get_footer();
 		return;
 	}
+
+	$parts = deimlofo_block_template_parts();
 	?>
 	<footer class="wp-block-template-part">
-		<?php block_footer_area(); ?>
+		<?php echo $parts['footer']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme template part rendered by block_footer_area(); printed unescaped exactly as template-canvas.php does. ?>
 	</footer>
 </div>
 	<?php wp_footer(); ?>
