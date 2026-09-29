@@ -2,76 +2,145 @@
 /**
  * Admin functionality - columns
  *
- * @package Deimos_Lost_Found_Animals
- * @author  Wojtek Kobylecki / Bella Design Studio
- * @version 1.0.6
+ * @package   Deimos_Lost_Found_Animals
+ * @author    Wojtek Kobylecki
+ * @copyright Copyright (c) 2026 Wojtek Kobylecki
+ * @license   GPL-2.0-or-later
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
-class LFA_Admin {
+/**
+ * Admin list table columns for the animal post type.
+ */
+class DEIMLOFO_Admin {
 
-    private static $instance = null;
+	/**
+	 * Single instance
+	 *
+	 * @var DEIMLOFO_Admin|null
+	 */
+	private static $instance = null;
 
-    public static function instance() {
-        if ( is_null( self::$instance ) ) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	/**
+	 * Get instance
+	 *
+	 * @return DEIMLOFO_Admin
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    private function __construct() {
-        add_filter( 'manage_animal_posts_columns', array( $this, 'columns' ) );
-        add_action( 'manage_animal_posts_custom_column', array( $this, 'column_content' ), 10, 2 );
-        add_filter( 'manage_edit-animal_sortable_columns', array( $this, 'sortable' ) );
-    }
+	/**
+	 * Constructor
+	 */
+	private function __construct() {
+		add_filter( 'manage_deimlofo_animal_posts_columns', array( $this, 'columns' ) );
+		add_action( 'manage_deimlofo_animal_posts_custom_column', array( $this, 'column_content' ), 10, 2 );
+		add_filter( 'manage_edit-deimlofo_animal_sortable_columns', array( $this, 'sortable' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'list_table_styles' ) );
+	}
 
-    public function columns( $columns ) {
-        $new               = array();
-        $new['cb']         = $columns['cb'];
-        $new['lfa_photo']  = __( 'Photo', 'deimos-lost-found-animals' );
-        $new['title']      = $columns['title'];
-        $new['lfa_status'] = __( 'Status', 'deimos-lost-found-animals' );
-        $new['lfa_location'] = __( 'Location', 'deimos-lost-found-animals' );
-        $new['lfa_breed']  = __( 'Breed', 'deimos-lost-found-animals' );
-        $new['lfa_type']   = __( 'Type', 'deimos-lost-found-animals' );
-        $new['date']       = $columns['date'];
-        return $new;
-    }
+	/**
+	 * Load the admin stylesheet on the animal list table.
+	 *
+	 * @param string $hook_suffix Current admin page hook suffix.
+	 * @return void
+	 */
+	public function list_table_styles( $hook_suffix ) {
+		if ( 'edit.php' !== $hook_suffix ) {
+			return;
+		}
 
-    public function column_content( $column, $post_id ) {
-        switch ( $column ) {
-            case 'lfa_photo':
-                if ( has_post_thumbnail( $post_id ) ) {
-                    echo get_the_post_thumbnail( $post_id, array( 50, 50 ), array( 'style' => 'border-radius:4px;' ) );
-                } else {
-                    echo '<span style="color:#999;">' . esc_html__( 'No photo', 'deimos-lost-found-animals' ) . '</span>';
-                }
-                break;
-            case 'lfa_status':
-                $status = get_post_meta( $post_id, '_lfa_status', true );
-                $badge  = lfa_get_badge( $status );
-                echo '<span style="background:' . esc_attr( $badge['color'] ) . ';color:#fff;padding:3px 8px;border-radius:3px;font-size:11px;">' . esc_html( $badge['text'] ) . '</span>';
-                break;
-            case 'lfa_location':
-                echo esc_html( get_post_meta( $post_id, '_lfa_location', true ) );
-                break;
-            case 'lfa_breed':
-                echo esc_html( get_post_meta( $post_id, '_lfa_breed', true ) );
-                break;
-            case 'lfa_type':
-                $type = get_post_meta( $post_id, '_lfa_type', true );
-                echo esc_html( $type ? $type : 'Dog' );
-                break;
-        }
-    }
+		$screen = get_current_screen();
+		if ( $screen && 'deimlofo_animal' === $screen->post_type ) {
+			wp_enqueue_style( 'deimlofo-admin', DEIMLOFO_PLUGIN_URL . 'assets/css/admin.css', array(), DEIMLOFO_VERSION );
+		}
+	}
 
-    public function sortable( $columns ) {
-        $columns['lfa_status'] = 'lfa_status';
-        return $columns;
-    }
+	/**
+	 * Define the list table columns.
+	 *
+	 * @param array $columns Existing columns.
+	 * @return array
+	 */
+	public function columns( $columns ) {
+		$new                      = array();
+		$new['cb']                = isset( $columns['cb'] ) ? $columns['cb'] : '';
+		$new['deimlofo_photo']    = __( 'Photo', 'deimos-lost-found-animals' );
+		$new['title']             = isset( $columns['title'] ) ? $columns['title'] : __( 'Title', 'deimos-lost-found-animals' );
+		$new['deimlofo_status']   = __( 'Status', 'deimos-lost-found-animals' );
+		$new['deimlofo_location'] = __( 'Location', 'deimos-lost-found-animals' );
+		$new['deimlofo_breed']    = __( 'Breed', 'deimos-lost-found-animals' );
+		$new['deimlofo_type']     = __( 'Type', 'deimos-lost-found-animals' );
+		$new['date']              = isset( $columns['date'] ) ? $columns['date'] : __( 'Date', 'deimos-lost-found-animals' );
+
+		return $new;
+	}
+
+	/**
+	 * Render a custom column.
+	 *
+	 * @param string $column  Column key.
+	 * @param int    $post_id Post ID.
+	 * @return void
+	 */
+	public function column_content( $column, $post_id ) {
+		switch ( $column ) {
+			case 'deimlofo_photo':
+				if ( has_post_thumbnail( $post_id ) ) {
+					echo wp_kses_post(
+						get_the_post_thumbnail(
+							$post_id,
+							array( 50, 50 ),
+							array( 'class' => 'deimlofo-admin-thumb' )
+						)
+					);
+				} else {
+					echo '<span class="deimlofo-admin-muted">' . esc_html__( 'No photo', 'deimos-lost-found-animals' ) . '</span>';
+				}
+				break;
+
+			case 'deimlofo_status':
+				$status = get_post_meta( $post_id, '_deimlofo_status', true );
+				$badge  = deimlofo_get_badge( $status );
+				printf(
+					'<span class="deimlofo-admin-badge deimlofo-status--%1$s">%2$s</span>',
+					esc_attr( $badge['slug'] ),
+					esc_html( $badge['text'] )
+				);
+				break;
+
+			case 'deimlofo_location':
+				echo esc_html( get_post_meta( $post_id, '_deimlofo_location', true ) );
+				break;
+
+			case 'deimlofo_breed':
+				echo esc_html( get_post_meta( $post_id, '_deimlofo_breed', true ) );
+				break;
+
+			case 'deimlofo_type':
+				$type = get_post_meta( $post_id, '_deimlofo_type', true );
+				echo esc_html( $type ? $type : __( 'Dog', 'deimos-lost-found-animals' ) );
+				break;
+		}
+	}
+
+	/**
+	 * Mark the status column as sortable.
+	 *
+	 * @param array $columns Sortable columns.
+	 * @return array
+	 */
+	public function sortable( $columns ) {
+		$columns['deimlofo_status'] = 'deimlofo_status';
+		return $columns;
+	}
 }
 
-LFA_Admin::instance();
+DEIMLOFO_Admin::instance();

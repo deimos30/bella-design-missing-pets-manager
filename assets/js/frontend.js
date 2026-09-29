@@ -1,87 +1,122 @@
 /**
- * Deimos Lost & Found Animals - Frontend JS (Simplified)
+ * Deimos Lost & Found Animals - Frontend JS
  *
- * @author  Wojtek Kobylecki / Bella Design Studio
- * @version 1.0.6
+ * @package   Deimos_Lost_Found_Animals
+ * @author    Wojtek Kobylecki
+ * @copyright Copyright (c) 2026 Wojtek Kobylecki
+ * @license   GPL-2.0-or-later
  */
 
-(function($) {
-    'use strict';
+(function ($) {
+	'use strict';
 
-    // FILTERS
-    var LFA_Filters = {
-        init: function() {
-            var self = this;
-            this.$grid = $('#lfa-grid');
-            this.$cards = this.$grid.find('.lfa-card');
-            this.$status = $('#lfa-filter-status');
-            this.$gender = $('#lfa-filter-gender');
-            this.$sort = $('#lfa-sort');
-            this.$reset = $('#lfa-reset');
-            this.$count = $('#lfa-count');
-            this.$noResults = $('#lfa-no-results');
+	/**
+	 * Filter/sort controller for one shortcode instance.
+	 *
+	 * Every lookup is scoped to the container element, so any number of grids
+	 * can live on the same page without interfering with each other.
+	 *
+	 * @param {Element} container Shortcode container element.
+	 */
+	function deimlofoGrid(container) {
+		var $container = $(container);
+		var $grid = $container.find('.deimlofo-grid').first();
 
-            if (!this.$grid.length) return;
+		if (!$grid.length) {
+			return;
+		}
 
-            this.$status.on('change', function() { self.apply(); });
-            this.$gender.on('change', function() { self.apply(); });
-            this.$sort.on('change', function() { self.apply(); });
-            this.$reset.on('click', function() { self.reset(); });
-        },
+		var $cards = $grid.find('.deimlofo-card');
+		var $status = $container.find('.deimlofo-filter-status');
+		var $gender = $container.find('.deimlofo-filter-gender');
+		var $sort = $container.find('.deimlofo-sort');
+		var $count = $container.find('.deimlofo-count-value');
+		var $noResults = $container.find('.deimlofo-no-results');
 
-        apply: function() {
-            var status = this.$status.val();
-            var gender = this.$gender.val();
-            var sort = this.$sort.val();
-            var visible = [];
+		function apply() {
+			var status = $status.val() || '';
+			var gender = $gender.val() || '';
+			var sort = $sort.val() || 'newest';
+			var visible = [];
 
-            this.$cards.each(function() {
-                var $card = $(this);
-                var show = true;
-                if (status && $card.data('status') !== status) show = false;
-                if (gender && $card.data('gender') !== gender) show = false;
-                if (show) {
-                    $card.show();
-                    visible.push($card);
-                } else {
-                    $card.hide();
-                }
-            });
+			$cards.each(function () {
+				var $card = $(this);
+				var show = true;
 
-            visible.sort(function(a, b) {
-                var $a = $(a), $b = $(b);
-                switch (sort) {
-                    case 'oldest':
-                        return new Date($a.data('date')) - new Date($b.data('date'));
-                    case 'name-asc':
-                        return ($a.data('name') || '').localeCompare($b.data('name') || '');
-                    case 'name-desc':
-                        return ($b.data('name') || '').localeCompare($a.data('name') || '');
-                    default:
-                        return new Date($b.data('date')) - new Date($a.data('date'));
-                }
-            });
+				if (status && String($card.data('status')) !== status) {
+					show = false;
+				}
+				if (gender && String($card.data('gender')) !== gender) {
+					show = false;
+				}
 
-            var self = this;
-            visible.forEach(function($card) { self.$grid.append($card); });
-            this.$count.text(visible.length);
+				if (show) {
+					$card.show();
+					visible.push($card);
+				} else {
+					$card.hide();
+				}
+			});
 
-            if (visible.length === 0 && this.$cards.length > 0) {
-                this.$noResults.show();
-            } else {
-                this.$noResults.hide();
-            }
-        },
+			visible.sort(function (a, b) {
+				switch (sort) {
+					case 'oldest':
+						return new Date(a.data('date')) - new Date(b.data('date'));
+					case 'name-asc':
+						return String(a.data('name') || '').localeCompare(String(b.data('name') || ''));
+					case 'name-desc':
+						return String(b.data('name') || '').localeCompare(String(a.data('name') || ''));
+					default:
+						return new Date(b.data('date')) - new Date(a.data('date'));
+				}
+			});
 
-        reset: function() {
-            this.$status.val('');
-            this.$gender.val('');
-            this.$sort.val('newest');
-            this.apply();
-        }
-    };
+			visible.forEach(function ($card) {
+				$grid.append($card);
+			});
 
-    $(document).ready(function() {
-        LFA_Filters.init();
-    });
+			$count.text(visible.length);
+
+			if (visible.length === 0 && $cards.length > 0) {
+				$noResults.show();
+			} else {
+				$noResults.hide();
+			}
+		}
+
+		function reset() {
+			$status.val('');
+			$gender.val('');
+			$sort.val('newest');
+			apply();
+		}
+
+		$status.on('change', apply);
+		$gender.on('change', apply);
+		$sort.on('change', apply);
+		$container.on('click', '.deimlofo-reset, .deimlofo-reset-trigger', reset);
+	}
+
+	/**
+	 * Progressive enhancement for the Back link.
+	 *
+	 * The link carries a real archive URL in its href, so it still works with
+	 * JavaScript disabled; history.back() is only used when there is somewhere
+	 * to go back to.
+	 */
+	function deimlofoBackLink() {
+		$(document).on('click', '.deimlofo-back', function (event) {
+			if (window.history.length > 1) {
+				event.preventDefault();
+				window.history.back();
+			}
+		});
+	}
+
+	$(function () {
+		$('.deimlofo-container').each(function () {
+			deimlofoGrid(this);
+		});
+		deimlofoBackLink();
+	});
 })(jQuery);

@@ -1,11 +1,13 @@
 /**
  * Deimos Lost & Found Animals - Admin Styles
  *
- * @author  Wojtek Kobylecki / Bella Design Studio
- * @version 1.0.6
+ * @package   Deimos_Lost_Found_Animals
+ * @author    Wojtek Kobylecki
+ * @copyright Copyright (c) 2026 Wojtek Kobylecki
+ * @license   GPL-2.0-or-later
  */
 
-.lfa-help-box {
+.deimlofo-help-box {
     background: #e7f5ff;
     border-left: 4px solid #0073aa;
     padding: 12px 16px;
@@ -13,12 +15,12 @@
     line-height: 1.6;
 }
 
-.lfa-table {
+.deimlofo-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.lfa-table th {
+.deimlofo-table th {
     text-align: left;
     padding: 12px 16px 12px 0;
     width: 140px;
@@ -26,17 +28,72 @@
     font-weight: 600;
 }
 
-.lfa-table td {
+.deimlofo-table td {
     padding: 10px 0;
 }
 
-.lfa-table input[type="text"],
-.lfa-table input[type="date"],
-.lfa-table select {
+.deimlofo-table input[type="text"],
+.deimlofo-table input[type="date"],
+.deimlofo-table select {
     width: 100%;
     max-width: 320px;
 }
 
 .wp-picker-container {
     display: inline-block;
+}
+
+/* Settings page helpers (previously inline style attributes) */
+.deimlofo-radio-label {
+    margin-right: 20px;
+}
+
+.deimlofo-shortcode {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.deimlofo-spaced {
+    margin-top: 15px;
+}
+
+/* Animals list table */
+.deimlofo-admin-thumb {
+    border-radius: 4px;
+}
+
+.deimlofo-admin-muted {
+    color: #999;
+}
+
+.deimlofo-admin-badge {
+    display: inline-block;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    background: #6b7280;
+}
+
+.deimlofo-admin-badge.deimlofo-status--found-today {
+    background: #f97316;
+}
+
+.deimlofo-admin-badge.deimlofo-status--found {
+    background: #3b82f6;
+}
+
+.deimlofo-admin-badge.deimlofo-status--available {
+    background: #8b5cf6;
+}
+
+.deimlofo-admin-badge.deimlofo-status--reunited {
+    background: #10b981;
+}
+
+.deimlofo-admin-badge.deimlofo-status--not-available,
+.deimlofo-admin-badge.deimlofo-status--default {
+    background: #6b7280;
 }
