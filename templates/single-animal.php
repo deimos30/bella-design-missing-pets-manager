@@ -14,25 +14,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-$type       = deimlofo_get_meta( get_the_ID(), 'type' );
-$status     = deimlofo_get_meta( get_the_ID(), 'status' );
-$location   = deimlofo_get_meta( get_the_ID(), 'location' );
-$breed      = deimlofo_get_meta( get_the_ID(), 'breed' );
-$color      = deimlofo_get_meta( get_the_ID(), 'color' );
-$gender     = deimlofo_get_meta( get_the_ID(), 'gender' );
-$age        = deimlofo_get_meta( get_the_ID(), 'age' );
-$found_date = deimlofo_get_meta( get_the_ID(), 'found_date' );
-$microchip  = deimlofo_get_meta( get_the_ID(), 'microchip' );
+$deimlofo_type       = deimlofo_get_meta( get_the_ID(), 'type' );
+$deimlofo_status     = deimlofo_get_meta( get_the_ID(), 'status' );
+$deimlofo_location   = deimlofo_get_meta( get_the_ID(), 'location' );
+$deimlofo_breed      = deimlofo_get_meta( get_the_ID(), 'breed' );
+$deimlofo_color      = deimlofo_get_meta( get_the_ID(), 'color' );
+$deimlofo_gender     = deimlofo_get_meta( get_the_ID(), 'gender' );
+$deimlofo_age        = deimlofo_get_meta( get_the_ID(), 'age' );
+$deimlofo_found_date = deimlofo_get_meta( get_the_ID(), 'found_date' );
+$deimlofo_microchip  = deimlofo_get_meta( get_the_ID(), 'microchip' );
 
-$badge = deimlofo_get_badge( $status );
+$deimlofo_badge = deimlofo_get_badge( $deimlofo_status );
 
-if ( empty( $type ) ) {
-	$type = 'Animal';
+if ( empty( $deimlofo_type ) ) {
+	$deimlofo_type = 'Animal';
 }
 
-// Get contact settings
-$default_phone = deimlofo_get_setting( 'default_phone', '' );
-$default_email = deimlofo_get_setting( 'default_email', '' );
+// Contact settings.
+$deimlofo_default_phone = deimlofo_get_setting( 'default_phone', '' );
+$deimlofo_default_email = deimlofo_get_setting( 'default_email', '' );
 ?>
 
 <div class="deimlofo-single">
@@ -54,8 +54,8 @@ $default_email = deimlofo_get_setting( 'default_email', '' );
 						<span><?php esc_html_e( 'No Photo', 'deimos-lost-found-animals' ); ?></span>
 					</div>
 				<?php endif; ?>
-				<span class="deimlofo-main-badge deimlofo-status--<?php echo esc_attr( $badge['slug'] ); ?>">
-					<?php echo esc_html( $badge['text'] ); ?>
+				<span class="deimlofo-main-badge deimlofo-status--<?php echo esc_attr( $deimlofo_badge['slug'] ); ?>">
+					<?php echo esc_html( $deimlofo_badge['text'] ); ?>
 				</span>
 			</div>
 		</div>
@@ -63,53 +63,53 @@ $default_email = deimlofo_get_setting( 'default_email', '' );
 		<div class="deimlofo-details-col">
 			<h1 class="deimlofo-single-title"><?php the_title(); ?></h1>
 
-			<?php if ( $location ) : ?>
+			<?php if ( $deimlofo_location ) : ?>
 				<div class="deimlofo-single-location">
-					&#128205; <?php esc_html_e( 'Found at:', 'deimos-lost-found-animals' ); ?> <strong><?php echo esc_html( $location ); ?></strong>
+					&#128205; <?php esc_html_e( 'Found at:', 'deimos-lost-found-animals' ); ?> <strong><?php echo esc_html( $deimlofo_location ); ?></strong>
 				</div>
 			<?php endif; ?>
 
 			<div class="deimlofo-details-grid">
-				<?php if ( $type ) : ?>
+				<?php if ( $deimlofo_type ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Type', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( $type ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( $deimlofo_type ); ?></div>
 					</div>
 				<?php endif; ?>
-				<?php if ( $breed ) : ?>
+				<?php if ( $deimlofo_breed ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Breed', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( $breed ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( $deimlofo_breed ); ?></div>
 					</div>
 				<?php endif; ?>
-				<?php if ( $gender ) : ?>
+				<?php if ( $deimlofo_gender ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Gender', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( $gender ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( $deimlofo_gender ); ?></div>
 					</div>
 				<?php endif; ?>
-				<?php if ( $age ) : ?>
+				<?php if ( $deimlofo_age ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Age', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( $age ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( $deimlofo_age ); ?></div>
 					</div>
 				<?php endif; ?>
-				<?php if ( $color ) : ?>
+				<?php if ( $deimlofo_color ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Color', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( $color ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( $deimlofo_color ); ?></div>
 					</div>
 				<?php endif; ?>
-				<?php if ( $found_date ) : ?>
+				<?php if ( $deimlofo_found_date ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Date Found', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( date_i18n( 'j F Y', strtotime( $found_date ) ) ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( date_i18n( 'j F Y', strtotime( $deimlofo_found_date ) ) ); ?></div>
 					</div>
 				<?php endif; ?>
-				<?php if ( $microchip ) : ?>
+				<?php if ( $deimlofo_microchip ) : ?>
 					<div class="deimlofo-detail-box">
 						<div class="deimlofo-detail-label"><?php esc_html_e( 'Microchip', 'deimos-lost-found-animals' ); ?></div>
-						<div class="deimlofo-detail-value"><?php echo esc_html( $microchip ); ?></div>
+						<div class="deimlofo-detail-value"><?php echo esc_html( $deimlofo_microchip ); ?></div>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -117,56 +117,56 @@ $default_email = deimlofo_get_setting( 'default_email', '' );
 			<?php if ( get_the_content() ) : ?>
 				<div class="deimlofo-description">
 					<h2>
-<?php
-printf(
-	/* translators: %s: animal type, e.g. Dog. */
-	esc_html__( 'About This %s', 'deimos-lost-found-animals' ),
-	esc_html( $type )
-);
-?>
+				<?php
+				printf(
+					/* translators: %s: animal type, e.g. Dog. */
+					esc_html__( 'About This %s', 'deimos-lost-found-animals' ),
+					esc_html( $deimlofo_type )
+				);
+				?>
 </h2>
 					<div class="deimlofo-description-content"><?php the_content(); ?></div>
 				</div>
 			<?php endif; ?>
 
-			<?php if ( 'Reunited' !== $status && 'Not Available' !== $status ) : ?>
+			<?php if ( 'Reunited' !== $deimlofo_status && 'Not Available' !== $deimlofo_status ) : ?>
 				<div class="deimlofo-contact-box">
 					<h3>
-<?php
-printf(
-	/* translators: %s: lowercased animal type, e.g. dog. */
-	esc_html__( 'Is this your %s?', 'deimos-lost-found-animals' ),
-	esc_html( strtolower( $type ) )
-);
-?>
+				<?php
+				printf(
+					/* translators: %s: lowercased animal type, e.g. dog. */
+					esc_html__( 'Is this your %s?', 'deimos-lost-found-animals' ),
+					esc_html( strtolower( $deimlofo_type ) )
+				);
+				?>
 </h3>
 					<p><?php esc_html_e( 'If you recognize this animal, please contact us immediately.', 'deimos-lost-found-animals' ); ?></p>
 					<div class="deimlofo-contact-btns">
-						<?php if ( ! empty( $default_phone ) ) : ?>
-							<a href="tel:<?php echo esc_attr( $default_phone ); ?>" class="deimlofo-btn-call">&#128222; <?php esc_html_e( 'Call Us', 'deimos-lost-found-animals' ); ?></a>
+						<?php if ( ! empty( $deimlofo_default_phone ) ) : ?>
+							<a href="tel:<?php echo esc_attr( $deimlofo_default_phone ); ?>" class="deimlofo-btn-call">&#128222; <?php esc_html_e( 'Call Us', 'deimos-lost-found-animals' ); ?></a>
 						<?php endif; ?>
 
 						<?php
-						if ( ! empty( $default_email ) ) :
-							$email_subject = sprintf(
+						if ( ! empty( $deimlofo_default_email ) ) :
+							$deimlofo_email_subject = sprintf(
 								/* translators: %s: animal name/title */
 								__( 'Lost & Found Animal: %s', 'deimos-lost-found-animals' ),
 								get_the_title()
 							);
-							$email_body = sprintf(
+							$deimlofo_email_body = sprintf(
 								/* translators: %s: link to animal page */
 								__( 'Hello, I think this might be my animal: %s', 'deimos-lost-found-animals' ),
 								get_permalink()
 							);
-							$mailto_link = 'mailto:' . $default_email . '?subject=' . rawurlencode( $email_subject ) . '&body=' . rawurlencode( $email_body );
+							$deimlofo_mailto_link = 'mailto:' . $deimlofo_default_email . '?subject=' . rawurlencode( $deimlofo_email_subject ) . '&body=' . rawurlencode( $deimlofo_email_body );
 							?>
-							<a href="<?php echo esc_url( $mailto_link ); ?>" class="deimlofo-btn-msg">&#9993; <?php esc_html_e( 'Send Message', 'deimos-lost-found-animals' ); ?></a>
+							<a href="<?php echo esc_url( $deimlofo_mailto_link ); ?>" class="deimlofo-btn-msg">&#9993; <?php esc_html_e( 'Send Message', 'deimos-lost-found-animals' ); ?></a>
 						<?php else : ?>
 							<a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="deimlofo-btn-msg">&#9993; <?php esc_html_e( 'Send Message', 'deimos-lost-found-animals' ); ?></a>
 						<?php endif; ?>
 					</div>
 				</div>
-			<?php elseif ( 'Reunited' === $status ) : ?>
+			<?php elseif ( 'Reunited' === $deimlofo_status ) : ?>
 				<div class="deimlofo-reunited-box">
 					<span class="deimlofo-reunited-heart">&#10084;</span>
 					<h3><?php esc_html_e( 'Happy Reunion!', 'deimos-lost-found-animals' ); ?></h3>

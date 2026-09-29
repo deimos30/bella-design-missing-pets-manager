@@ -36,10 +36,18 @@ class DEIMLOFO_Post_Type {
 		return self::$instance;
 	}
 
+	/**
+	 * Constructor
+	 */
 	private function __construct() {
 		add_action( 'init', array( $this, 'register' ) );
 	}
 
+	/**
+	 * Register the deimlofo_animal post type.
+	 *
+	 * @return void
+	 */
 	public function register() {
 		$labels = array(
 			'name'               => __( 'Animals', 'deimos-lost-found-animals' ),
@@ -57,20 +65,20 @@ class DEIMLOFO_Post_Type {
 		);
 
 		$args = array(
-			'labels'              => $labels,
-			'public'              => true,
-			'publicly_queryable'  => true,
-			'show_ui'             => true,
-			'show_in_menu'        => true,
-			'query_var'           => true,
-			'rewrite'             => array( 'slug' => 'animal' ),
-			'capability_type'     => 'post',
-			'has_archive'         => true,
-			'hierarchical'        => false,
-			'menu_position'       => 5,
-			'menu_icon'           => 'dashicons-pets',
-			'supports'            => array( 'title', 'editor', 'thumbnail' ),
-			'show_in_rest'        => false,
+			'labels'             => $labels,
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => 'animal' ),
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => 5,
+			'menu_icon'          => 'dashicons-pets',
+			'supports'           => array( 'title', 'editor', 'thumbnail' ),
+			'show_in_rest'       => false,
 		);
 
 		register_post_type( 'deimlofo_animal', $args );

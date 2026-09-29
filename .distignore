@@ -23,6 +23,8 @@ phpcs.xml
 phpcs.xml.dist
 phpunit.xml
 phpunit.xml.dist
+.phpunit.result.cache
+.phpcs.cache
 .phpcs.xml.dist
 
 # Tests and build output

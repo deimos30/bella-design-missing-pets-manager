@@ -3,7 +3,7 @@ Contributors: wko1
 Tags: lost, found, animals, pets, shelter
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -86,6 +86,14 @@ animals, photos and settings are migrated automatically; only the shortcode text
 
 == Changelog ==
 
+= 1.1.1 =
+* Fixed: Settings from 1.0.x could be lost when upgrading. Activating the plugin created default `deimlofo_settings` before the migration ran, so the migration skipped the legacy `lfa_settings` and then deleted them. Activation now migrates first and only writes defaults when no legacy settings are left.
+* Fixed: Legacy settings are merged with the new defaults and validated with the same rules as the settings screen (columns 1-4, integer limit, allowlisted width/alignment, hex colours, sanitized phone and email).
+* Fixed: The legacy settings are deleted only after the new settings, animals and animal details have been written and verified by reading them back from the database. The database version is recorded only after a successful migration.
+* Fixed: A failed or interrupted migration keeps all original data, shows a notice to administrators and is retried automatically. The migration is protected by a lock and is safe to run repeatedly.
+* Fixed: The migration now also runs on the front end, so animals stay visible after an automatic update even before an administrator visits the dashboard.
+* Fixed: Menu items linking to animals or the animal archive are updated to the new post type during migration.
+
 = 1.1.0 =
 * Changed: All functions, classes, constants, options, post meta, nonces, asset handles, image sizes and CSS classes are now prefixed with `deimlofo` / `DEIMLOFO_` to meet WordPress.org uniqueness requirements.
 * Changed: Custom post type renamed from `animal` to `deimlofo_animal`. The public URL slug stays `animal`, so existing links keep working.
@@ -133,6 +141,9 @@ animals, photos and settings are migrated automatically; only the shortcode text
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Fixes the 1.0.x upgrade so that your existing settings are always kept. Recommended for everyone upgrading from 1.0.x. Remember to use the [deimlofo_animals] shortcode.
 
 = 1.1.0 =
 Important: the shortcode is now [deimlofo_animals]. Update any page using the old [lost_found_animals] shortcode. Your animals, photos and settings migrate automatically.

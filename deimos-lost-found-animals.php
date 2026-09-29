@@ -3,7 +3,7 @@
  * Plugin Name: Deimos Lost & Found Animals
  * Plugin URI: https://github.com/deimos30/bella-design-missing-pets-manager
  * Description: Manage lost and found animals with filtering and shortcode display. Works with any WordPress theme.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Wojtek Kobylecki
  * Author URI: https://github.com/deimos30
  * License: GPL v2 or later
@@ -24,8 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'DEIMLOFO_VERSION', '1.1.0' );
-define( 'DEIMLOFO_DB_VERSION', '1.1.0' );
+define( 'DEIMLOFO_VERSION', '1.1.1' );
+define( 'DEIMLOFO_DB_VERSION', '1.1.1' );
 define( 'DEIMLOFO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DEIMLOFO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'DEIMLOFO_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -51,20 +51,71 @@ function deimlofo_default_settings() {
 }
 
 /**
+ * Validate and sanitize a settings array.
+ *
+ * Shared by the settings screen and the 1.0.x migration, so migrated values go
+ * through exactly the same checks as values saved by an administrator.
+ *
+ * @param mixed $input Raw settings.
+ * @return array Complete, sanitized settings.
+ */
+function deimlofo_sanitize_settings( $input ) {
+	$input     = is_array( $input ) ? $input : array();
+	$defaults  = deimlofo_default_settings();
+	$sanitized = array();
+
+	// Columns: 1-4.
+	$columns              = isset( $input['columns'] ) && is_scalar( $input['columns'] ) ? intval( $input['columns'] ) : $defaults['columns'];
+	$sanitized['columns'] = ( $columns >= 1 && $columns <= 4 ) ? $columns : $defaults['columns'];
+
+	// Limit: any integer, -1 means unlimited.
+	$limit              = isset( $input['limit'] ) && is_scalar( $input['limit'] ) ? intval( $input['limit'] ) : $defaults['limit'];
+	$sanitized['limit'] = max( -1, $limit );
+
+	// Show filters: yes / no.
+	$sanitized['show_filters'] = isset( $input['show_filters'] ) && 'yes' === $input['show_filters'] ? 'yes' : 'no';
+
+	// Filter width and alignment: allowlists.
+	$sanitized['filter_width']     = isset( $input['filter_width'] ) && in_array( $input['filter_width'], array( 'compact', 'medium', 'large', 'full' ), true ) ? $input['filter_width'] : $defaults['filter_width'];
+	$sanitized['filter_alignment'] = isset( $input['filter_alignment'] ) && in_array( $input['filter_alignment'], array( 'left', 'center', 'right' ), true ) ? $input['filter_alignment'] : $defaults['filter_alignment'];
+
+	// Colours: valid hex colours, otherwise the default.
+	foreach ( array( 'filter_bar_color', 'reset_button_color', 'view_details_button_color' ) as $key ) {
+		$color             = isset( $input[ $key ] ) && is_string( $input[ $key ] ) ? sanitize_hex_color( $input[ $key ] ) : '';
+		$sanitized[ $key ] = ! empty( $color ) ? $color : $defaults[ $key ];
+	}
+
+	// Contact.
+	$sanitized['default_phone'] = isset( $input['default_phone'] ) && is_scalar( $input['default_phone'] ) ? sanitize_text_field( (string) $input['default_phone'] ) : '';
+	$sanitized['default_email'] = isset( $input['default_email'] ) && is_scalar( $input['default_email'] ) ? sanitize_email( (string) $input['default_email'] ) : '';
+
+	return $sanitized;
+}
+
+/**
  * Plugin activation.
+ *
+ * Data from 1.0.x is migrated first. Default settings are written only when no
+ * legacy `lfa_settings` option is left, so defaults can never take the place of
+ * settings that still have to be migrated (or whose migration failed and will
+ * be retried).
  *
  * @return void
  */
 function deimlofo_activate() {
 	require_once DEIMLOFO_PLUGIN_DIR . 'includes/class-post-type.php';
+	require_once DEIMLOFO_PLUGIN_DIR . 'includes/class-upgrade.php';
 	DEIMLOFO_Post_Type::instance()->register();
 
-	$defaults = deimlofo_default_settings();
-	$existing = get_option( 'deimlofo_settings', array() );
-	if ( empty( $existing ) || ! is_array( $existing ) ) {
-		add_option( 'deimlofo_settings', $defaults );
-	} else {
-		update_option( 'deimlofo_settings', array_merge( $defaults, $existing ) );
+	deimlofo_maybe_upgrade();
+
+	if ( null === deimlofo_read_option_from_db( 'lfa_settings' ) ) {
+		$existing = get_option( 'deimlofo_settings', array() );
+		if ( empty( $existing ) || ! is_array( $existing ) ) {
+			add_option( 'deimlofo_settings', deimlofo_default_settings() );
+		} else {
+			update_option( 'deimlofo_settings', deimlofo_sanitize_settings( array_merge( deimlofo_default_settings(), $existing ) ) );
+		}
 	}
 
 	flush_rewrite_rules();

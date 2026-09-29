@@ -36,12 +36,20 @@ class DEIMLOFO_Meta_Boxes {
 		return self::$instance;
 	}
 
+	/**
+	 * Constructor
+	 */
 	private function __construct() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_deimlofo_animal', array( $this, 'save' ), 10, 2 );
 		add_action( 'do_meta_boxes', array( $this, 'rename_featured_image' ) );
 	}
 
+	/**
+	 * Register the Animal Details meta box.
+	 *
+	 * @return void
+	 */
 	public function add_meta_boxes() {
 		add_meta_box(
 			'deimlofo_details',
@@ -53,6 +61,11 @@ class DEIMLOFO_Meta_Boxes {
 		);
 	}
 
+	/**
+	 * Re-title the featured image box as the main photo.
+	 *
+	 * @return void
+	 */
 	public function rename_featured_image() {
 		remove_meta_box( 'postimagediv', 'deimlofo_animal', 'side' );
 		add_meta_box(
@@ -65,6 +78,12 @@ class DEIMLOFO_Meta_Boxes {
 		);
 	}
 
+	/**
+	 * Render the Animal Details meta box.
+	 *
+	 * @param WP_Post $post Current post.
+	 * @return void
+	 */
 	public function render_details( $post ) {
 		wp_nonce_field( 'deimlofo_save_animal_data', 'deimlofo_nonce' );
 
